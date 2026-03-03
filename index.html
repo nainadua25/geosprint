@@ -1,0 +1,1156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0, maximum-scale=1.0">
+<title>GeoSprint 🌍</title>
+<link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=Nunito:wght@400;600;700;800;900&display=swap" rel="stylesheet">
+<style>
+:root {
+  --bg:      #0b1120;
+  --bg2:     #111827;
+  --surface: #1a2540;
+  --surface2:#1e2d4a;
+  --gold:    #f5c842;
+  --gold2:   #e8a020;
+  --teal:    #2dd4bf;
+  --red:     #f87171;
+  --green:   #4ade80;
+  --blue:    #60a5fa;
+  --text:    #f0f4ff;
+  --muted:   #7a8fbb;
+  --border:  rgba(255,255,255,0.07);
+}
+
+* { margin:0; padding:0; box-sizing:border-box; }
+
+body {
+  background: var(--bg);
+  color: var(--text);
+  font-family: 'Nunito', sans-serif;
+  min-height: 100vh;
+  overflow-x: hidden;
+  background-image:
+    radial-gradient(ellipse at 10% 0%, rgba(45,212,191,0.07) 0%, transparent 50%),
+    radial-gradient(ellipse at 90% 100%, rgba(245,200,66,0.06) 0%, transparent 50%);
+}
+
+/* ── STARS BG ── */
+.stars {
+  position: fixed; inset: 0; pointer-events: none; z-index: 0;
+  background-image:
+    radial-gradient(1px 1px at 10% 15%, rgba(255,255,255,0.4) 0%, transparent 100%),
+    radial-gradient(1px 1px at 30% 60%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 55% 25%, rgba(255,255,255,0.35) 0%, transparent 100%),
+    radial-gradient(1px 1px at 75% 80%, rgba(255,255,255,0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 90% 40%, rgba(255,255,255,0.3) 0%, transparent 100%),
+    radial-gradient(1px 1px at 20% 90%, rgba(255,255,255,0.2) 0%, transparent 100%),
+    radial-gradient(1px 1px at 65% 55%, rgba(255,255,255,0.25) 0%, transparent 100%),
+    radial-gradient(1px 1px at 45% 10%, rgba(255,255,255,0.3) 0%, transparent 100%);
+}
+
+/* ── SCREENS ── */
+.screen { display:none; position:relative; z-index:1; }
+.screen.active { display:block; }
+
+/* ══════════════════════
+   HOME SCREEN
+══════════════════════ */
+#home {
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  padding: 24px;
+  text-align: center;
+}
+
+.globe-icon {
+  font-size: 5rem;
+  animation: spin 20s linear infinite;
+  display: block;
+  margin-bottom: 8px;
+  filter: drop-shadow(0 0 24px rgba(45,212,191,0.5));
+}
+
+@keyframes spin {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+
+.game-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(4rem, 15vw, 7rem);
+  letter-spacing: 4px;
+  line-height: 1;
+  background: linear-gradient(135deg, var(--gold), var(--teal));
+  -webkit-background-clip: text; -webkit-text-fill-color: transparent; background-clip: text;
+  filter: drop-shadow(0 0 30px rgba(245,200,66,0.3));
+  animation: fadeDown 0.7s ease both;
+}
+
+.game-sub {
+  font-size: 1rem; color: var(--muted); margin: 10px 0 36px;
+  animation: fadeDown 0.7s ease 0.1s both;
+  letter-spacing: 2px; text-transform: uppercase;
+}
+
+@keyframes fadeDown { from{opacity:0;transform:translateY(-16px)} to{opacity:1;transform:translateY(0)} }
+@keyframes fadeUp   { from{opacity:0;transform:translateY(16px)}  to{opacity:1;transform:translateY(0)} }
+
+.how-it-works {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 20px;
+  padding: 24px 28px;
+  max-width: 420px;
+  width: 100%;
+  margin-bottom: 32px;
+  text-align: left;
+  animation: fadeUp 0.6s ease 0.2s both;
+}
+
+.how-it-works h3 {
+  font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px;
+  color: var(--teal); font-weight: 800; margin-bottom: 16px;
+}
+
+.how-row {
+  display: flex; align-items: flex-start; gap: 12px; margin-bottom: 12px;
+}
+
+.how-num {
+  width: 28px; height: 28px; border-radius: 50%;
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--bg); font-weight: 900; font-size: 0.82rem;
+  display: flex; align-items:center; justify-content:center; flex-shrink: 0;
+}
+
+.how-text { font-size: 0.88rem; color: var(--muted); line-height: 1.5; }
+.how-text strong { color: var(--text); }
+
+.score-badge {
+  display: flex; gap: 8px; justify-content: center; margin-bottom: 32px;
+  animation: fadeUp 0.6s ease 0.3s both;
+}
+
+.badge {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 100px; padding: 8px 18px;
+  font-size: 0.82rem; color: var(--muted);
+  display: flex; align-items: center; gap: 6px;
+}
+
+.badge span { color: var(--gold); font-weight: 800; }
+
+.btn-play {
+  background: linear-gradient(135deg, var(--gold), var(--gold2));
+  color: var(--bg); border: none; border-radius: 16px;
+  padding: 18px 52px; font-family: 'Bebas Neue', sans-serif;
+  font-size: 1.6rem; letter-spacing: 3px;
+  cursor: pointer; transition: transform 0.15s, box-shadow 0.15s;
+  box-shadow: 0 8px 32px rgba(245,200,66,0.3);
+  animation: fadeUp 0.6s ease 0.4s both;
+}
+
+.btn-play:hover { transform: translateY(-3px); box-shadow: 0 12px 40px rgba(245,200,66,0.45); }
+.btn-play:active { transform: translateY(0); }
+
+/* ══════════════════════
+   GAME SCREEN
+══════════════════════ */
+#game {
+  min-height: 100vh;
+  padding: 20px 16px 40px;
+  max-width: 520px;
+  margin: 0 auto;
+}
+
+.game-topbar {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 20px; padding-top: 4px;
+}
+
+.g-score-wrap { text-align: left; }
+.g-score-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
+.g-score-val {
+  font-family: 'Bebas Neue', sans-serif; font-size: 2rem;
+  color: var(--gold); line-height: 1; letter-spacing: 2px;
+}
+
+.g-round-wrap { text-align: center; }
+.g-round-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
+.g-round-dots { display: flex; gap: 6px; margin-top: 4px; justify-content: center; }
+.rdot {
+  width: 10px; height: 10px; border-radius: 50%;
+  background: var(--surface2); border: 1.5px solid var(--muted);
+  transition: all 0.3s;
+}
+.rdot.done  { background: var(--green); border-color: var(--green); }
+.rdot.active{ background: var(--gold);  border-color: var(--gold); box-shadow: 0 0 8px rgba(245,200,66,0.6); }
+.rdot.wrong { background: var(--red);   border-color: var(--red); }
+
+.g-timer-wrap { text-align: right; }
+.g-timer-label { font-size: 0.7rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
+.g-timer-val {
+  font-family: 'Bebas Neue', sans-serif; font-size: 2rem;
+  color: var(--teal); line-height: 1; letter-spacing: 2px;
+  transition: color 0.3s;
+}
+.g-timer-val.urgent { color: var(--red); animation: pulse 0.5s ease infinite; }
+@keyframes pulse { 0%,100%{transform:scale(1)} 50%{transform:scale(1.1)} }
+
+/* CLUE CARD */
+.clue-section { margin-bottom: 20px; }
+
+.clue-header {
+  display: flex; justify-content: space-between; align-items: center;
+  margin-bottom: 12px;
+}
+
+.clue-title { font-size: 0.75rem; color: var(--teal); text-transform: uppercase; letter-spacing: 2px; font-weight: 800; }
+.clue-pts   { font-size: 0.75rem; color: var(--muted); }
+.clue-pts strong { color: var(--gold); }
+
+.clues-grid { display: flex; flex-direction: column; gap: 8px; }
+
+.clue-item {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 14px;
+  padding: 14px 16px;
+  display: flex; align-items: center; gap: 12px;
+  opacity: 0; transform: translateX(-12px);
+  transition: all 0.35s ease;
+  position: relative; overflow: hidden;
+}
+
+.clue-item.revealed {
+  opacity: 1; transform: translateX(0);
+  border-color: rgba(45,212,191,0.2);
+}
+
+.clue-item::before {
+  content:''; position:absolute; left:0; top:0; bottom:0; width:3px; border-radius:3px 0 0 3px;
+  background: linear-gradient(180deg, var(--teal), var(--blue));
+}
+
+.clue-num {
+  width: 24px; height: 24px; border-radius: 50%;
+  background: rgba(45,212,191,0.12); border: 1px solid rgba(45,212,191,0.3);
+  color: var(--teal); font-size: 0.72rem; font-weight: 800;
+  display: flex; align-items:center; justify-content:center; flex-shrink:0;
+}
+
+.clue-text { font-size: 0.88rem; color: var(--text); line-height: 1.4; }
+.clue-locked { font-size: 0.82rem; color: var(--muted); font-style: italic; }
+
+.clue-pts-tag {
+  margin-left: auto; flex-shrink:0;
+  background: rgba(245,200,66,0.1); border: 1px solid rgba(245,200,66,0.2);
+  border-radius: 100px; padding: 2px 8px;
+  font-size: 0.7rem; font-weight: 800; color: var(--gold);
+}
+
+/* NEXT CLUE BTN */
+.btn-next-clue {
+  width: 100%; margin-top: 12px;
+  background: rgba(45,212,191,0.1); border: 1.5px solid rgba(45,212,191,0.35);
+  border-radius: 12px; padding: 12px;
+  color: var(--teal); font-family: 'Nunito', sans-serif; font-weight: 700;
+  font-size: 0.88rem; cursor: pointer; transition: all 0.2s;
+  display: flex; align-items:center; justify-content:center; gap: 8px;
+}
+.btn-next-clue:hover { background: rgba(45,212,191,0.18); }
+.btn-next-clue:disabled { opacity:0.3; cursor:not-allowed; }
+
+/* ANSWER SECTION */
+.answer-section { margin-top: 4px; }
+
+.answer-label { font-size: 0.75rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; margin-bottom: 10px; }
+
+.answer-grid {
+  display: grid; grid-template-columns: 1fr 1fr;
+  gap: 10px; margin-bottom: 12px;
+}
+
+.ans-btn {
+  background: var(--surface);
+  border: 1.5px solid var(--border);
+  border-radius: 14px; padding: 14px 10px;
+  color: var(--text); font-family: 'Nunito', sans-serif;
+  font-size: 0.88rem; font-weight: 700; cursor: pointer;
+  transition: all 0.2s; text-align: center; line-height: 1.3;
+  display: flex; align-items:center; justify-content:center; gap: 6px;
+}
+
+.ans-btn:hover:not(:disabled) { border-color: var(--gold); background: rgba(245,200,66,0.06); transform: translateY(-2px); }
+.ans-btn.correct { background: rgba(74,222,128,0.12); border-color: var(--green); color: var(--green); animation: correctPop 0.4s ease; }
+.ans-btn.wrong   { background: rgba(248,113,113,0.1);  border-color: var(--red);   color: var(--red);   animation: shake 0.4s ease; }
+.ans-btn:disabled { cursor: not-allowed; }
+
+@keyframes correctPop { 0%{transform:scale(1)} 50%{transform:scale(1.06)} 100%{transform:scale(1)} }
+@keyframes shake {
+  0%,100%{transform:translateX(0)}
+  25%{transform:translateX(-6px)}
+  75%{transform:translateX(6px)}
+}
+
+/* RESULT OVERLAY */
+.round-result {
+  position: fixed; inset: 0; z-index: 100;
+  display: flex; align-items:center; justify-content:center;
+  background: rgba(0,0,0,0.6); backdrop-filter: blur(8px);
+  opacity: 0; pointer-events:none; transition: opacity 0.3s;
+}
+
+.round-result.show { opacity:1; pointer-events:all; }
+
+.result-card {
+  background: var(--surface);
+  border: 1px solid var(--border);
+  border-radius: 24px; padding: 36px 32px;
+  max-width: 360px; width: 90%; text-align: center;
+  transform: scale(0.9); transition: transform 0.3s;
+}
+
+.round-result.show .result-card { transform: scale(1); }
+
+.result-emoji { font-size: 3.5rem; display: block; margin-bottom: 12px; }
+.result-title { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 2px; margin-bottom: 6px; }
+.result-country { font-size: 1rem; color: var(--muted); margin-bottom: 20px; }
+.result-pts {
+  background: rgba(245,200,66,0.1); border: 1px solid rgba(245,200,66,0.25);
+  border-radius: 14px; padding: 16px;
+  margin-bottom: 24px;
+}
+.result-pts .pts-big { font-family: 'Bebas Neue', sans-serif; font-size: 3rem; color: var(--gold); letter-spacing: 2px; line-height:1; }
+.result-pts .pts-label { font-size: 0.78rem; color: var(--muted); text-transform: uppercase; letter-spacing: 1.5px; }
+
+.btn-next-round {
+  width:100%; background: linear-gradient(135deg, var(--gold), var(--gold2));
+  border:none; border-radius:14px; padding:14px;
+  font-family:'Bebas Neue',sans-serif; font-size:1.4rem; letter-spacing:2px;
+  color: var(--bg); cursor:pointer; transition: opacity 0.2s;
+}
+.btn-next-round:hover { opacity:0.88; }
+
+/* ══════════════════════
+   FINAL SCORE SCREEN
+══════════════════════ */
+#final {
+  min-height: 100vh;
+  display: flex; flex-direction:column; align-items:center; justify-content:center;
+  padding: 24px; text-align: center;
+}
+
+.final-title {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(2.5rem, 10vw, 4.5rem);
+  letter-spacing: 4px; margin-bottom: 4px;
+  background: linear-gradient(135deg, var(--gold), var(--teal));
+  -webkit-background-clip:text; -webkit-text-fill-color:transparent; background-clip:text;
+}
+
+.final-score-big {
+  font-family: 'Bebas Neue', sans-serif;
+  font-size: clamp(5rem, 20vw, 9rem);
+  color: var(--gold); letter-spacing: 4px; line-height: 1;
+  filter: drop-shadow(0 0 30px rgba(245,200,66,0.4));
+}
+
+.final-label { font-size: 0.8rem; color: var(--muted); text-transform: uppercase; letter-spacing: 2px; margin-bottom: 32px; }
+
+.rank-badge {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 16px; padding: 20px 32px; margin-bottom: 28px;
+  max-width: 320px; width: 100%;
+}
+
+.rank-emoji { font-size: 2.5rem; display:block; margin-bottom: 8px; }
+.rank-title { font-family:'Bebas Neue',sans-serif; font-size:1.6rem; letter-spacing:2px; color: var(--gold); }
+.rank-desc  { font-size:0.82rem; color:var(--muted); margin-top:4px; line-height:1.5; }
+
+.final-stats {
+  display: grid; grid-template-columns: 1fr 1fr 1fr;
+  gap: 10px; max-width: 320px; width:100%; margin-bottom: 28px;
+}
+
+.fstat {
+  background: var(--surface); border: 1px solid var(--border);
+  border-radius: 14px; padding: 14px 10px; text-align:center;
+}
+
+.fstat-num { font-family:'Bebas Neue',sans-serif; font-size:1.8rem; color: var(--teal); letter-spacing:1px; }
+.fstat-lbl { font-size:0.7rem; color:var(--muted); text-transform:uppercase; letter-spacing:1px; }
+
+.final-btns { display:flex; gap:10px; max-width:320px; width:100%; }
+
+.btn-share {
+  flex:1; background: rgba(45,212,191,0.12); border:1.5px solid rgba(45,212,191,0.3);
+  border-radius:14px; padding:14px; color:var(--teal);
+  font-family:'Nunito',sans-serif; font-weight:800; font-size:0.9rem;
+  cursor:pointer; transition:all 0.2s;
+}
+.btn-share:hover { background:rgba(45,212,191,0.2); }
+
+.btn-play-again {
+  flex:1.5; background:linear-gradient(135deg,var(--gold),var(--gold2));
+  border:none; border-radius:14px; padding:14px;
+  font-family:'Bebas Neue',sans-serif; font-size:1.2rem; letter-spacing:2px;
+  color:var(--bg); cursor:pointer; transition:opacity 0.2s;
+}
+.btn-play-again:hover { opacity:0.88; }
+
+/* TOAST */
+.toast {
+  position:fixed; bottom:24px; left:50%;
+  transform:translateX(-50%) translateY(60px);
+  background: var(--green); color:#000;
+  padding:10px 24px; border-radius:100px;
+  font-size:0.85rem; font-weight:700;
+  opacity:0; transition:all .3s; z-index:999; pointer-events:none;
+}
+.toast.show { opacity:1; transform:translateX(-50%) translateY(0); }
+
+/* HIGH SCORE BANNER */
+.hs-banner {
+  position:fixed; top:0; left:0; right:0;
+  background: linear-gradient(135deg,var(--gold),var(--gold2));
+  color:var(--bg); text-align:center; padding:10px;
+  font-family:'Bebas Neue',sans-serif; font-size:1.2rem; letter-spacing:2px;
+  transform:translateY(-100%); transition:transform 0.4s; z-index:200;
+}
+.hs-banner.show { transform:translateY(0); }
+
+@media (max-width: 400px) {
+  .answer-grid { grid-template-columns: 1fr; }
+  .final-stats { grid-template-columns: 1fr 1fr; }
+}
+</style>
+</head>
+<body>
+
+<div class="stars"></div>
+
+<!-- ══ HOME SCREEN ══ -->
+<div id="home" class="screen active">
+  <span class="globe-icon">🌍</span>
+  <div class="game-title">GeoSprint</div>
+  <div class="game-sub">Guess the country · 5 clues · Race the clock</div>
+
+  <div class="how-it-works">
+    <h3>⚡ How to Play</h3>
+    <div class="how-row">
+      <div class="how-num">1</div>
+      <div class="how-text"><strong>Read the clues</strong> — revealed one by one about a mystery country</div>
+    </div>
+    <div class="how-row">
+      <div class="how-num">2</div>
+      <div class="how-text"><strong>Guess early, score big</strong> — Clue 1 = 500 pts · Clue 5 = 100 pts</div>
+    </div>
+    <div class="how-row">
+      <div class="how-num">3</div>
+      <div class="how-text"><strong>Beat the timer</strong> — 30 seconds per round, 5 rounds total</div>
+    </div>
+    <div class="how-row">
+      <div class="how-num">4</div>
+      <div class="how-text"><strong>4 choices</strong> — pick the right country before time runs out!</div>
+    </div>
+  </div>
+
+  <div class="score-badge">
+    <div class="badge">🏆 Best: <span id="hs-home">0</span></div>
+    <div class="badge">🌍 Games: <span id="games-home">0</span></div>
+  </div>
+
+  <button class="btn-play" onclick="startGame()">PLAY NOW</button>
+</div>
+
+<!-- ══ GAME SCREEN ══ -->
+<div id="game" class="screen">
+  <!-- Top bar -->
+  <div class="game-topbar">
+    <div class="g-score-wrap">
+      <div class="g-score-label">Score</div>
+      <div class="g-score-val" id="g-score">0</div>
+    </div>
+    <div class="g-round-wrap">
+      <div class="g-round-label">Rounds</div>
+      <div class="g-round-dots" id="round-dots"></div>
+    </div>
+    <div class="g-timer-wrap">
+      <div class="g-timer-label">Time</div>
+      <div class="g-timer-val" id="g-timer">30</div>
+    </div>
+  </div>
+
+  <!-- Clues -->
+  <div class="clue-section">
+    <div class="clue-header">
+      <div class="clue-title">🔍 Clues</div>
+      <div class="clue-pts">Clue <span id="clue-num">1</span> → <strong id="clue-pts-val">500 pts</strong></div>
+    </div>
+    <div class="clues-grid" id="clues-grid"></div>
+    <button class="btn-next-clue" id="btn-next-clue" onclick="revealNextClue()">
+      🔓 Reveal Next Clue <span style="opacity:0.6;font-size:0.78rem;">(–100 pts)</span>
+    </button>
+  </div>
+
+  <!-- Answers -->
+  <div class="answer-section">
+    <div class="answer-label">🗺 Pick the country</div>
+    <div class="answer-grid" id="answer-grid"></div>
+  </div>
+</div>
+
+<!-- ══ FINAL SCREEN ══ -->
+<div id="final" class="screen">
+  <div class="final-title">Game Over!</div>
+  <div class="final-score-big" id="final-score">0</div>
+  <div class="final-label">Total Points</div>
+
+  <div class="rank-badge">
+    <span class="rank-emoji" id="rank-emoji">🌍</span>
+    <div class="rank-title" id="rank-title">Explorer</div>
+    <div class="rank-desc" id="rank-desc">Keep exploring the world!</div>
+  </div>
+
+  <div class="final-stats">
+    <div class="fstat"><div class="fstat-num" id="fs-correct">0</div><div class="fstat-lbl">Correct</div></div>
+    <div class="fstat"><div class="fstat-num" id="fs-best">0</div><div class="fstat-lbl">Best Streak</div></div>
+    <div class="fstat"><div class="fstat-num" id="fs-hs">0</div><div class="fstat-lbl">High Score</div></div>
+  </div>
+
+  <div class="final-btns">
+    <button class="btn-share" onclick="shareScore()">📤 Share</button>
+    <button class="btn-play-again" onclick="startGame()">PLAY AGAIN</button>
+  </div>
+</div>
+
+<!-- ══ ROUND RESULT OVERLAY ══ -->
+<div class="round-result" id="round-result">
+  <div class="result-card">
+    <span class="result-emoji" id="res-emoji">✅</span>
+    <div class="result-title" id="res-title">Correct!</div>
+    <div class="result-country" id="res-country">The answer was Brazil 🇧🇷</div>
+    <div class="result-pts">
+      <div class="pts-big" id="res-pts">+300</div>
+      <div class="pts-label">Points Earned</div>
+    </div>
+    <button class="btn-next-round" id="btn-next-round" onclick="nextRound()">NEXT ROUND →</button>
+  </div>
+</div>
+
+<!-- HIGH SCORE BANNER -->
+<div class="hs-banner" id="hs-banner">🏆 NEW HIGH SCORE!</div>
+
+<!-- TOAST -->
+<div class="toast" id="toast"></div>
+
+<script>
+// ═══════════════════════════════════════
+// COUNTRY DATA — 25 countries, 5 clues each + 4 choices
+// ═══════════════════════════════════════
+const COUNTRIES = [
+  {
+    name:'Brazil', flag:'🇧🇷',
+    clues:[
+      'I am the largest country in South America',
+      'The Amazon River flows through me',
+      'My currency is the Real',
+      'I have won the FIFA World Cup 5 times',
+      'My capital city is Brasília'
+    ],
+    choices:['Brazil','Argentina','Colombia','Peru']
+  },
+  {
+    name:'Japan', flag:'🇯🇵',
+    clues:[
+      'I am an island nation in East Asia',
+      'I am home to the highest-grossing animation industry in the world',
+      'Mount Fuji is my highest peak',
+      'My currency is the Yen',
+      'My capital is Tokyo'
+    ],
+    choices:['China','South Korea','Japan','Vietnam']
+  },
+  {
+    name:'Egypt', flag:'🇪🇬',
+    clues:[
+      'One of the Seven Wonders of the World is located in me',
+      'The Nile, the world\'s longest river, flows through me',
+      'I was home to ancient pharaohs',
+      'The Sahara Desert covers most of my land',
+      'My capital is Cairo'
+    ],
+    choices:['Egypt','Sudan','Libya','Morocco']
+  },
+  {
+    name:'Canada', flag:'🇨🇦',
+    clues:[
+      'I am the second largest country in the world by area',
+      'I share the world\'s longest land border with the USA',
+      'Hockey is my most beloved sport',
+      'I have two official languages: English and French',
+      'My capital is Ottawa'
+    ],
+    choices:['Australia','Russia','Canada','USA']
+  },
+  {
+    name:'India', flag:'🇮🇳',
+    clues:[
+      'I am the most populous country in the world',
+      'The Taj Mahal is one of my most famous landmarks',
+      'I have over 22 officially recognised languages',
+      'Cricket is the most popular sport in my country',
+      'My capital is New Delhi'
+    ],
+    choices:['Bangladesh','Pakistan','Nepal','India']
+  },
+  {
+    name:'Australia', flag:'🇦🇺',
+    clues:[
+      'I am both a country and a continent',
+      'The Great Barrier Reef is off my coast',
+      'Kangaroos and koalas are native to me',
+      'My currency is the Australian Dollar',
+      'My capital is Canberra'
+    ],
+    choices:['New Zealand','Australia','Papua New Guinea','Fiji']
+  },
+  {
+    name:'Italy', flag:'🇮🇹',
+    clues:[
+      'My shape looks like a boot',
+      'I have the highest number of UNESCO World Heritage Sites',
+      'Pizza and pasta originated from my cuisine',
+      'The Roman Empire was born in me',
+      'My capital is Rome'
+    ],
+    choices:['Spain','France','Italy','Greece']
+  },
+  {
+    name:'Russia', flag:'🇷🇺',
+    clues:[
+      'I am the largest country in the world by area',
+      'I span across 11 time zones',
+      'Lake Baikal, the world\'s deepest lake, is within me',
+      'My currency is the Ruble',
+      'My capital is Moscow'
+    ],
+    choices:['Kazakhstan','Russia','Ukraine','Mongolia']
+  },
+  {
+    name:'Mexico', flag:'🇲🇽',
+    clues:[
+      'I am home to ancient Aztec and Mayan civilisations',
+      'I border the USA to my north',
+      'Tacos and guacamole are famous dishes from my country',
+      'My currency is the Peso',
+      'My capital is Mexico City'
+    ],
+    choices:['Colombia','Cuba','Mexico','Guatemala']
+  },
+  {
+    name:'South Africa', flag:'🇿🇦',
+    clues:[
+      'I am the southernmost country on the African continent',
+      'I have 3 capital cities',
+      'Nelson Mandela was my most famous president',
+      'I hosted the FIFA World Cup in 2010',
+      'I have 11 official languages'
+    ],
+    choices:['Zimbabwe','Mozambique','Namibia','South Africa']
+  },
+  {
+    name:'France', flag:'🇫🇷',
+    clues:[
+      'I am the most visited country in the world',
+      'The Eiffel Tower stands tall in my most famous city',
+      'I am famous for my wine, cheese and baguettes',
+      'The Tour de France cycling race is named after me',
+      'My capital is Paris'
+    ],
+    choices:['Belgium','France','Switzerland','Luxembourg']
+  },
+  {
+    name:'China', flag:'🇨🇳',
+    clues:[
+      'I have the world\'s largest population after India',
+      'The Great Wall stretches thousands of kilometres within me',
+      'I invented paper, printing, gunpowder and the compass',
+      'My currency is the Yuan (Renminbi)',
+      'My capital is Beijing'
+    ],
+    choices:['China','Mongolia','Taiwan','North Korea']
+  },
+  {
+    name:'Argentina', flag:'🇦🇷',
+    clues:[
+      'I am the 8th largest country in the world',
+      'Lionel Messi, a football legend, is from me',
+      'Tango dance originated in my country',
+      'Patagonia, one of the world\'s great wildernesses, is in me',
+      'My capital is Buenos Aires'
+    ],
+    choices:['Chile','Uruguay','Argentina','Paraguay']
+  },
+  {
+    name:'Kenya', flag:'🇰🇪',
+    clues:[
+      'I sit right on the equator in East Africa',
+      'The Maasai Mara is one of the greatest wildlife reserves in the world',
+      'I am famous for producing world-class long-distance runners',
+      'Swahili and English are my official languages',
+      'My capital is Nairobi'
+    ],
+    choices:['Ethiopia','Tanzania','Kenya','Uganda']
+  },
+  {
+    name:'Norway', flag:'🇳🇴',
+    clues:[
+      'I have the most fjords of any country in the world',
+      'The Northern Lights (Aurora Borealis) can be seen from my land',
+      'I consistently top rankings as the happiest country in the world',
+      'My currency is the Krone',
+      'My capital is Oslo'
+    ],
+    choices:['Sweden','Finland','Denmark','Norway']
+  },
+  {
+    name:'Turkey', flag:'🇹🇷',
+    clues:[
+      'I am a country that spans two continents: Europe and Asia',
+      'Istanbul, my largest city, was once called Constantinople',
+      'I am home to the ancient city of Troy',
+      'My currency is the Lira',
+      'My capital is Ankara'
+    ],
+    choices:['Greece','Turkey','Iran','Syria']
+  },
+  {
+    name:'New Zealand', flag:'🇳🇿',
+    clues:[
+      'I am an island nation in the South Pacific',
+      'The Lord of the Rings films were shot on my stunning landscapes',
+      'The Māori people are my indigenous people',
+      'The All Blacks rugby team represents me',
+      'My capital is Wellington'
+    ],
+    choices:['Australia','Fiji','New Zealand','Samoa']
+  },
+  {
+    name:'Saudi Arabia', flag:'🇸🇦',
+    clues:[
+      'I am the largest country in the Middle East',
+      'Mecca and Medina, the holiest cities in Islam, are within me',
+      'I have the world\'s second largest oil reserves',
+      'My currency is the Saudi Riyal',
+      'My capital is Riyadh'
+    ],
+    choices:['Iraq','Iran','Kuwait','Saudi Arabia']
+  },
+  {
+    name:'Peru', flag:'🇵🇪',
+    clues:[
+      'Machu Picchu, the ancient Inca city, is within me',
+      'The Amazon River begins in my Andes mountains',
+      'I am home to the Nazca Lines, mysterious giant geoglyphs',
+      'My currency is the Sol',
+      'My capital is Lima'
+    ],
+    choices:['Bolivia','Peru','Ecuador','Chile']
+  },
+  {
+    name:'Greece', flag:'🇬🇷',
+    clues:[
+      'I am considered the birthplace of Western civilisation',
+      'Democracy and the Olympic Games were born in me',
+      'I have over 6,000 islands',
+      'My currency is the Euro (previously the Drachma)',
+      'My capital is Athens'
+    ],
+    choices:['Turkey','Italy','Greece','Cyprus']
+  },
+  {
+    name:'Thailand', flag:'🇹🇭',
+    clues:[
+      'I was never colonised by a European power',
+      'I have over 40,000 Buddhist temples',
+      'I am known as the "Land of Smiles"',
+      'Muay Thai boxing originated in me',
+      'My capital is Bangkok'
+    ],
+    choices:['Vietnam','Cambodia','Myanmar','Thailand']
+  },
+  {
+    name:'Germany', flag:'🇩🇪',
+    clues:[
+      'I am the most populous country in the European Union',
+      'Oktoberfest, the world\'s largest beer festival, is held in me',
+      'The Berlin Wall, which divided my capital, fell in 1989',
+      'I am the birthplace of the automobile',
+      'My capital is Berlin'
+    ],
+    choices:['Austria','Netherlands','Germany','Poland']
+  },
+  {
+    name:'Brazil', flag:'🇧🇷',
+    clues:[
+      'I am the only Portuguese-speaking country in the Americas',
+      'I host Rio Carnival, the world\'s biggest street festival',
+      'The Pantanal, the world\'s largest tropical wetland, is in me',
+      'I produce more coffee than any other country',
+      'I border every South American country except Chile and Ecuador'
+    ],
+    choices:['Brazil','Venezuela','Ecuador','Paraguay']
+  },
+  {
+    name:'Iceland', flag:'🇮🇸',
+    clues:[
+      'I have more active volcanoes than almost any country on Earth',
+      'The Blue Lagoon geothermal spa is one of my most famous attractions',
+      'Despite my name, I am quite green and not covered in ice',
+      'I have the oldest parliament in the world, the Althing',
+      'My capital is Reykjavik'
+    ],
+    choices:['Greenland','Iceland','Norway','Finland']
+  },
+  {
+    name:'Indonesia', flag:'🇮🇩',
+    clues:[
+      'I am the world\'s largest archipelago nation with over 17,000 islands',
+      'I have the 4th largest population in the world',
+      'Bali, a world-famous travel destination, is one of my islands',
+      'I am the world\'s largest Muslim-majority country by population',
+      'My capital is Jakarta (being moved to Nusantara)'
+    ],
+    choices:['Philippines','Malaysia','Indonesia','Papua New Guinea']
+  }
+];
+
+// ═══════════════════════════════════════
+// GAME STATE
+// ═══════════════════════════════════════
+const TOTAL_ROUNDS   = 5;
+const TIMER_SECONDS  = 30;
+const POINTS_MAP     = [500, 400, 300, 200, 100]; // by clue index
+
+let score       = 0;
+let round       = 0;
+let clueIndex   = 0;
+let timerLeft   = TIMER_SECONDS;
+let timerID     = null;
+let answered    = false;
+let roundQueue  = [];
+let correct     = 0;
+let streak      = 0;
+let bestStreak  = 0;
+let roundResults = [];
+
+let stats = JSON.parse(localStorage.getItem('geosprint') || '{"highScore":0,"gamesPlayed":0}');
+
+// ═══════════════════════════════════════
+// SCREENS
+// ═══════════════════════════════════════
+function showScreen(id) {
+  document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+  document.getElementById(id).classList.add('active');
+}
+
+// ═══════════════════════════════════════
+// INIT HOME
+// ═══════════════════════════════════════
+function initHome() {
+  document.getElementById('hs-home').textContent    = stats.highScore;
+  document.getElementById('games-home').textContent = stats.gamesPlayed;
+}
+
+// ═══════════════════════════════════════
+// START GAME
+// ═══════════════════════════════════════
+function startGame() {
+  score      = 0;
+  round      = 0;
+  correct    = 0;
+  streak     = 0;
+  bestStreak = 0;
+  roundResults = [];
+
+  // Shuffle and pick 5 countries
+  const shuffled = [...COUNTRIES].sort(() => Math.random() - 0.5);
+  roundQueue = shuffled.slice(0, TOTAL_ROUNDS);
+
+  showScreen('game');
+  buildRoundDots();
+  loadRound();
+}
+
+// ═══════════════════════════════════════
+// ROUND DOTS
+// ═══════════════════════════════════════
+function buildRoundDots() {
+  const wrap = document.getElementById('round-dots');
+  wrap.innerHTML = '';
+  for (let i = 0; i < TOTAL_ROUNDS; i++) {
+    const d = document.createElement('div');
+    d.className = 'rdot' + (i === 0 ? ' active' : '');
+    d.id = `dot-${i}`;
+    wrap.appendChild(d);
+  }
+}
+
+function updateDot(idx, state) {
+  const d = document.getElementById(`dot-${idx}`);
+  if (d) { d.className = 'rdot ' + state; }
+}
+
+// ═══════════════════════════════════════
+// LOAD ROUND
+// ═══════════════════════════════════════
+function loadRound() {
+  clearInterval(timerID);
+  answered  = false;
+  clueIndex = 0;
+
+  const country = roundQueue[round];
+
+  // Build clue grid
+  const grid = document.getElementById('clues-grid');
+  grid.innerHTML = '';
+  country.clues.forEach((clue, i) => {
+    const pts   = POINTS_MAP[i];
+    const item  = document.createElement('div');
+    item.className = 'clue-item';
+    item.id = `clue-${i}`;
+    if (i === 0) {
+      item.innerHTML = `
+        <div class="clue-num">${i+1}</div>
+        <div class="clue-text">${clue}</div>
+        <div class="clue-pts-tag">${pts}pts</div>`;
+      setTimeout(() => item.classList.add('revealed'), 80);
+    } else {
+      item.innerHTML = `
+        <div class="clue-num">${i+1}</div>
+        <div class="clue-locked">🔒 Locked — click Reveal Next Clue</div>
+        <div class="clue-pts-tag">${pts}pts</div>`;
+    }
+    grid.appendChild(item);
+  });
+
+  // Build answer buttons (shuffle choices)
+  const ansGrid = document.getElementById('answer-grid');
+  ansGrid.innerHTML = '';
+  const choices = [...country.choices].sort(() => Math.random() - 0.5);
+  choices.forEach(c => {
+    const btn = document.createElement('button');
+    btn.className = 'ans-btn';
+    const found = COUNTRIES.find(x => x.name === c);
+    btn.innerHTML = (found ? found.flag + ' ' : '') + c;
+    btn.onclick = () => submitAnswer(c, btn);
+    ansGrid.appendChild(btn);
+  });
+
+  // Update UI
+  document.getElementById('g-score').textContent = score;
+  updateClueHeader();
+  updateDot(round, 'active');
+
+  const nextBtn = document.getElementById('btn-next-clue');
+  nextBtn.disabled = false;
+
+  // Start timer
+  timerLeft = TIMER_SECONDS;
+  updateTimer();
+  timerID = setInterval(() => {
+    timerLeft--;
+    updateTimer();
+    if (timerLeft <= 0) timeUp();
+  }, 1000);
+}
+
+// ═══════════════════════════════════════
+// TIMER
+// ═══════════════════════════════════════
+function updateTimer() {
+  const el = document.getElementById('g-timer');
+  el.textContent = timerLeft;
+  el.className = 'g-timer-val' + (timerLeft <= 8 ? ' urgent' : '');
+}
+
+function timeUp() {
+  if (answered) return;
+  clearInterval(timerID);
+  answered = true;
+  streak = 0;
+  disableAnswers();
+  showRoundResult(false, 0);
+}
+
+// ═══════════════════════════════════════
+// REVEAL CLUE
+// ═══════════════════════════════════════
+function revealNextClue() {
+  if (clueIndex >= roundQueue[round].clues.length - 1) return;
+  clueIndex++;
+
+  const country = roundQueue[round];
+  const item = document.getElementById(`clue-${clueIndex}`);
+  item.innerHTML = `
+    <div class="clue-num">${clueIndex+1}</div>
+    <div class="clue-text">${country.clues[clueIndex]}</div>
+    <div class="clue-pts-tag">${POINTS_MAP[clueIndex]}pts</div>`;
+  setTimeout(() => item.classList.add('revealed'), 50);
+
+  updateClueHeader();
+
+  if (clueIndex >= country.clues.length - 1) {
+    document.getElementById('btn-next-clue').disabled = true;
+  }
+}
+
+function updateClueHeader() {
+  document.getElementById('clue-num').textContent     = clueIndex + 1;
+  document.getElementById('clue-pts-val').textContent = POINTS_MAP[clueIndex] + ' pts';
+}
+
+// ═══════════════════════════════════════
+// SUBMIT ANSWER
+// ═══════════════════════════════════════
+function submitAnswer(choice, btn) {
+  if (answered) return;
+  answered = true;
+  clearInterval(timerID);
+  document.getElementById('btn-next-clue').disabled = true;
+
+  const country   = roundQueue[round];
+  const isCorrect = choice === country.name;
+  const pts       = isCorrect ? POINTS_MAP[clueIndex] : 0;
+
+  btn.classList.add(isCorrect ? 'correct' : 'wrong');
+
+  if (isCorrect) {
+    score += pts;
+    correct++;
+    streak++;
+    bestStreak = Math.max(bestStreak, streak);
+    document.getElementById('g-score').textContent = score;
+  } else {
+    streak = 0;
+    // Highlight correct
+    document.querySelectorAll('.ans-btn').forEach(b => {
+      if (b.innerText.includes(country.name)) b.classList.add('correct');
+    });
+  }
+
+  disableAnswers();
+  updateDot(round, isCorrect ? 'done' : 'wrong');
+  roundResults.push({ correct: isCorrect, pts });
+
+  setTimeout(() => showRoundResult(isCorrect, pts, country), 600);
+}
+
+function disableAnswers() {
+  document.querySelectorAll('.ans-btn').forEach(b => b.disabled = true);
+}
+
+// ═══════════════════════════════════════
+// ROUND RESULT
+// ═══════════════════════════════════════
+function showRoundResult(isCorrect, pts, country) {
+  const overlay = document.getElementById('round-result');
+  const c = roundQueue[round];
+
+  document.getElementById('res-emoji').textContent   = isCorrect ? '🎉' : '😬';
+  document.getElementById('res-title').textContent   = isCorrect ? 'Correct!' : 'Wrong!';
+  document.getElementById('res-country').textContent = `The answer was ${c.name} ${c.flag}`;
+  document.getElementById('res-pts').textContent     = isCorrect ? `+${pts}` : '+0';
+
+  const btn = document.getElementById('btn-next-round');
+  btn.textContent = round < TOTAL_ROUNDS - 1 ? 'NEXT ROUND →' : 'SEE RESULTS →';
+
+  overlay.classList.add('show');
+}
+
+// ═══════════════════════════════════════
+// NEXT ROUND
+// ═══════════════════════════════════════
+function nextRound() {
+  document.getElementById('round-result').classList.remove('show');
+  round++;
+  if (round >= TOTAL_ROUNDS) {
+    endGame();
+  } else {
+    loadRound();
+  }
+}
+
+// ═══════════════════════════════════════
+// END GAME
+// ═══════════════════════════════════════
+function endGame() {
+  stats.gamesPlayed++;
+  let newHigh = false;
+  if (score > stats.highScore) {
+    stats.highScore = score;
+    newHigh = true;
+  }
+  localStorage.setItem('geosprint', JSON.stringify(stats));
+
+  // Rank
+  const rank = getRank(score);
+  document.getElementById('final-score').textContent = score;
+  document.getElementById('rank-emoji').textContent  = rank.emoji;
+  document.getElementById('rank-title').textContent  = rank.title;
+  document.getElementById('rank-desc').textContent   = rank.desc;
+  document.getElementById('fs-correct').textContent  = correct;
+  document.getElementById('fs-best').textContent     = bestStreak;
+  document.getElementById('fs-hs').textContent       = stats.highScore;
+
+  showScreen('final');
+  initHome();
+
+  if (newHigh) {
+    const banner = document.getElementById('hs-banner');
+    banner.classList.add('show');
+    setTimeout(() => banner.classList.remove('show'), 3000);
+  }
+}
+
+function getRank(s) {
+  if (s >= 2000) return { emoji:'🏅', title:'WORLD MASTER',    desc:'You\'re a geography genius! The world holds no secrets from you.' };
+  if (s >= 1500) return { emoji:'🌟', title:'GLOBE TROTTER',   desc:'Impressive knowledge! You know the world inside out.' };
+  if (s >= 1000) return { emoji:'🗺', title:'ADVENTURER',       desc:'Great explorer! A few more trips around the world and you\'ll be unstoppable.' };
+  if (s >= 500)  return { emoji:'🧭', title:'NAVIGATOR',        desc:'Not bad! You\'ve got your compass pointed in the right direction.' };
+  return          { emoji:'🌍', title:'EXPLORER',              desc:'Keep exploring! The world is a big place — you\'ll learn it all.' };
+}
+
+// ═══════════════════════════════════════
+// SHARE
+// ═══════════════════════════════════════
+function shareScore() {
+  const rank = getRank(score);
+  const msg = `🌍 GeoSprint\n\nI scored ${score} points!\nRank: ${rank.emoji} ${rank.title}\n✅ ${correct}/${TOTAL_ROUNDS} correct · 🔥 Best streak: ${bestStreak}\n\nCan you beat me? Play GeoSprint!`;
+  if (navigator.share) {
+    navigator.share({ title:'GeoSprint', text: msg });
+  } else {
+    navigator.clipboard.writeText(msg).then(() => showToast('📋 Score copied! Share it with friends!'));
+  }
+}
+
+function showToast(msg) {
+  const t = document.getElementById('toast');
+  t.textContent = msg;
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3000);
+}
+
+// ═══════════════════════════════════════
+// INIT
+// ═══════════════════════════════════════
+initHome();
+</script>
+</body>
+</html>
